@@ -29,7 +29,7 @@ This	is	a	normal	paragraph:
 	
 This	is	a	`inline	code	block`
 
-```sql
+```cplusplus
 var	a	=	{};
 ```
 
