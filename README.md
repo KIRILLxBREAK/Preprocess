@@ -1,13 +1,15 @@
-This	is	an	H1 
+Preprocess
 =============
 
-This	is	an	H2 
+Description
 ------------
 
+It's part of my diploma, which makes the processing of the text prior to syntaxing analysis.
 
-#	This	is	an	H1
-##	This	is	an	H2
-######	This	is	an	H6
+######	Сheckers
+
+This part provide inspection of stylistic mistakes.
+But also some stylistic mistakes are checked after syntaxing analysis, such as name checking.
 
 [I'm	an	inline-style	link	with	title](https://www.google.com	"Google's	Homepage")
 
@@ -32,7 +34,10 @@ var	a	=	{};
 ```
 
 
-Markdown	|	Less	|	Pretty ---	|	---	|	--*Still*	|	`renders`	|	**nicely** 1	|	2	|	3
+Markdown | Less	| Pretty 
+--- | --- | ---
+*Still*	| `renders` | **nicely**
+1 | 2 |	3
 
 
 | Tables        | Are           | Cool  |
