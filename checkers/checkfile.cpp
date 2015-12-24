@@ -22,12 +22,14 @@ using namespace std;
 void checkUtf8File(string file_name);
 void checkFileName(string file_name);
 void checkComment(string file_name);
+void checkMultipleInclude(string file_name);
 
 void checkFile(string file_name)
 {
     //checkUtf8File(file_name);
     checkFileName(file_name);
     checkComment(file_name);
+    checkMultipleInclude(file_name);
 }
 
 void checkUtf8File(string file_name)
@@ -77,6 +79,8 @@ void checkComment(string file_name)
         if (file.is_open())
         {
             getline(file,strline);
+            std::cout << "EEEEEEEE: " << strline << " " << strline.size() << std::endl;
+
             if (strline.find("/*") == string::npos && strline.find("//") == string::npos)
             {
                 std::stringstream ss("");
@@ -84,7 +88,7 @@ void checkComment(string file_name)
                 cout << ss.str() << endl;
                 printError(ss.str());
             }
-            else if (strline.size() << 10)
+            else if (strline.size() < 10)
             {
                 std::stringstream ss("");
                 ss << "must add a bigger comment to introduce  file";
@@ -93,6 +97,36 @@ void checkComment(string file_name)
 
             }
             file.close();
+        }
+    }
+}
+
+void checkMultipleInclude(string file_name)
+{
+    bool isIfndef = false;
+    if (file_name.find(".h") != string::npos || file_name.find(".hpp") != string::npos)
+    {
+        ifstream file(file_name.c_str());
+        string strline;
+        if (file.is_open())
+        {
+            getline(file,strline);
+            while (getline(file,strline))
+            {
+                string str = uncoment(strline);
+                if (str.find("#ifndef") != string::npos)
+                {
+                    isIfndef = true;
+                }
+            }
+            file.close();
+        }
+        if (!isIfndef)
+        {
+            std::stringstream ss("");
+            ss << "must add #ifndef to exclude muiltiple include";
+            cout << ss.str() << endl;
+            printError(ss.str());
         }
     }
 }

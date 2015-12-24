@@ -12,6 +12,9 @@
 #include "checktwoline.cpp"
 #include "func.cpp"
 
+bool ifDefBrac = false; //включен, если до этого уже просканили хотя бы одни кавычки
+bool brac = false; //включен, если кавычки остаются в той же строке
+
 using namespace std;
 
 void checkLong(string strline, int line);
@@ -21,6 +24,7 @@ void checkInclude(string strline, int line);
 void checkFloat(string strline, int line);
 void checkSpaceOperator(string strline, int line);
 void checkPragmaPack(string strline, int line);
+void checkbrackets(string strline, int line);
 void checkOneLine(string strline, int line)
 {
     checkLong(strline, line);
@@ -30,6 +34,7 @@ void checkOneLine(string strline, int line)
     checkFloat(strline, line);
     checkSpaceOperator(strline, line);
     checkPragmaPack(strline, line);
+    checkbrackets(strline, line);
 }
 
 void checkLong(string strline, int line)
@@ -305,4 +310,25 @@ void checkPragmaPack(string strline, int line)
     }
 }
 
+void checkbrackets(string strline, int line)
+{
+    if (ifDefBrac && strline.find("{") != std::string::npos)
+    {
+        std::cout << "EEEEEE brac def " << ifDefBrac << " " << brac << " " << line << std::endl;
+        if (strline.find("(") != std::string::npos && !brac)
+        {
+            std::stringstream ss("");
+            ss << "You must use the first type of brackets " << line;
+            cout << ss.str() << endl;
+            printError(ss.str());
+        }
+        if (strline.find("(") == std::string::npos && brac)
+        {
+            std::stringstream ss("");
+            ss << "You must use the second type of brackets " << line;
+            cout << ss.str() << endl;
+            printError(ss.str());
+        }
+    }
+}
 #endif

@@ -69,7 +69,7 @@ void MainWindow::open()
         std::ifstream file(fileName.toStdString().c_str());
         unsigned int line = 0;
 
-        //checkFile(fileName.toStdString());
+        checkFile(fileName.toStdString());
         std::cout << "Finish checkFile." << std::endl;
 
         if (file.is_open())
@@ -84,6 +84,22 @@ void MainWindow::open()
                         ind = indent(strline);
                         ifDefIndent = true;
                     }
+                    if (strline.find("{") != std::string::npos && !ifDefBrac)
+                    {
+                        std::string ucStrline = uncoment(strline);
+                        int len = ucStrline.size();
+                        std::string ucUsbkStrline = unspaceBackward(ucStrline);
+                        if (ucUsbkStrline[len - 1] == '{')
+                        {
+                            if(ucUsbkStrline.find("(") != std::string::npos)
+                            {
+                                brac = true;
+                            }
+                        }
+                        ifDefBrac = true;
+                        //std::cout << "EEEEEE brac def " << ifDefBrac << " " << brac << " " << line << std::endl;
+                    }
+
                     if (strline != "")
                     {
                         checkOneLine(strline, line);
@@ -104,7 +120,7 @@ void MainWindow::open()
     if (file.open(QIODevice::ReadWrite | QIODevice::Append | QIODevice::Text))
     {
         QTextStream stream(&file);
-        stream << QString("\nfinish log!") << endl;
+        stream << QString("finish log!") << endl;
         file.close();
     }
     else
@@ -117,8 +133,9 @@ void MainWindow::open()
         QTextStream in(&file);
         while (!in.atEnd()) {
             QString line = in.readLine();
-            QString text = textEdit->toPlainText() + line;
-            textEdit->setPlainText(text);
+            //QString text = textEdit->toPlainText() + line;
+            //textEdit->setPlainText(text);
+            textEdit->append(line);
         }
         file.close();
     }

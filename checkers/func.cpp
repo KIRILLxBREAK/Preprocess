@@ -25,6 +25,28 @@ string uncoment(string line)
     }
 }
 
+string unspaceForward(string line)
+{
+    int i = 0;
+    while (line[i] == ' ')
+    {
+        line.erase(i);
+        i++;
+    }
+}
+
+string unspaceBackward(string line)
+{
+    int i = line.size() - 1;
+    while (line[i] == ' ')
+    {
+        line.erase(i);
+        i--;
+    }
+    return line;
+    return line;
+}
+
 void printError(string error)
 {
     QFile file("log.txt");
