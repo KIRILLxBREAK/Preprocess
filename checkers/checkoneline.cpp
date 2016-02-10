@@ -24,7 +24,9 @@ void checkInclude(string strline, int line);
 void checkFloat(string strline, int line);
 void checkSpaceOperator(string strline, int line);
 void checkPragmaPack(string strline, int line);
-void checkbrackets(string strline, int line);
+void checkBrackets(string strline, int line);
+void checkInt(string strline, int line);
+void checkConstantSuff(string strline, int line);
 void checkOneLine(string strline, int line)
 {
     checkLong(strline, line);
@@ -34,7 +36,9 @@ void checkOneLine(string strline, int line)
     checkFloat(strline, line);
     checkSpaceOperator(strline, line);
     checkPragmaPack(strline, line);
-    checkbrackets(strline, line);
+    checkBrackets(strline, line);
+    checkInt(strline, line);
+    checkConstantSuff(strline, line);
 }
 
 void checkLong(string strline, int line)
@@ -310,11 +314,11 @@ void checkPragmaPack(string strline, int line)
     }
 }
 
-void checkbrackets(string strline, int line)
+void checkBrackets(string strline, int line)
 {
     if (ifDefBrac && strline.find("{") != std::string::npos)
     {
-        std::cout << "EEEEEE brac def " << ifDefBrac << " " << brac << " " << line << std::endl;
+        //std::cout << "EEEEEE brac def " << ifDefBrac << " " << brac << " " << line << std::endl;
         if (strline.find("(") != std::string::npos && !brac)
         {
             std::stringstream ss("");
@@ -331,4 +335,87 @@ void checkbrackets(string strline, int line)
         }
     }
 }
+
+void checkInt(string strline, int line)
+{
+    std::vector <char*> vec;
+    char *slovo;
+
+    char *writable = new char[strline.size() + 1];
+    std::copy(strline.begin(), strline.end(), writable);
+    writable[strline.size()] = '\0'; // don't forget the terminating 0
+
+    // разделяем строку на слова
+    slovo=strtok(writable," ");
+    while(slovo != NULL)
+    {
+        vec.push_back(slovo);
+        slovo=strtok(NULL," ");
+    }
+
+    for (unsigned int i = 0; i < vec.size(); i++)
+    {
+        if (string(vec[i]) == "int")
+        {
+            /*string er = "You must use double type! ";
+            er += line;
+            cout << er << endl;*/
+
+            std::stringstream ss("");
+            ss << "You must specify int size in line " << line;
+            cout << ss.str() << endl;
+            printError(ss.str());
+            break;
+        }
+    }
+
+    // don't forget to free the string after finished using it
+    delete[] writable;
+}
+
+void checkConstantSuff(string strline, int line)
+{
+    std::vector <char*> vec;
+    char *slovo;
+
+    char *writable = new char[strline.size() + 1];
+    std::copy(strline.begin(), strline.end(), writable);
+    writable[strline.size()] = '\0'; // don't forget the terminating 0
+
+    // разделяем строку на слова
+    slovo=strtok(writable," ");
+    while(slovo != NULL)
+    {
+        vec.push_back(slovo);
+        slovo=strtok(NULL," ");
+    }
+
+    for (unsigned int i = 0; i < vec.size(); i++)
+    {
+        if (string(vec[i]) == "const")
+        {
+            if (std::string(vec[i+1]).find("int") != std::string::npos || std::string(vec[i+1]).find("double") != std::string::npos)
+            {
+                char *constant = vec[i + 4];
+                int len = strlen(constant);
+                for(unsigned int i =0; i < len; i++)
+                {
+                    if (isalpha(constant[i]) && constant[i] != toupper(constant[i]))
+                    {
+                        std::stringstream ss("");
+                        ss << "constant suffix must be in upper register! " << constant[i];
+                        cout << ss.str() << endl;
+                        printError(ss.str());
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // don't forget to free the string after finished using it
+    delete[] writable;
+}
+
 #endif

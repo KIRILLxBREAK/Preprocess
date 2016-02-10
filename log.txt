@@ -1,0 +1,4 @@
+start log!
+filename must be in lower register! S
+You must specify int size in line 12
+finish log!

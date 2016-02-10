@@ -13,9 +13,11 @@ bool ifDefIndent = false; //включен, если до этого уже пр
 int ind = 0; //количество пробелов в отступе
 
 void checkIndent(string strline, string prevline, int line);
+void checkFuncIndent(string strline, string prevline, int line);
 void checkTwoLine(string strline, string prevline, int line)
 {
-    checkIndent(strline, prevline, line);
+    //checkIndent(strline, prevline, line);
+    checkFuncIndent(strline, prevline, line);
 }
 
 int indent(string line)
@@ -68,6 +70,41 @@ void checkIndent(string strline, string prevline, int line)
                 cout << ss.str() << endl;
                 printError(ss.str());
             }
+        }
+    }
+}
+
+void checkFuncIndent(string strline, string prevline, int line)
+{
+    int openBracCount = 0, closeBracCount = 0, index = -1;
+    for (unsigned int i = 0; i < prevline.size(); i++)
+    {
+        if (prevline[i] == '(')
+        {
+            if (openBracCount == 0)
+            {
+                index = i;
+            }
+            openBracCount++;
+        }
+        if (prevline[i] == ')')
+        {
+            closeBracCount++;
+        }
+    }
+    if (openBracCount > closeBracCount)
+    {
+        unsigned int i = 0;
+        while (strline[i] == ' ')
+        {
+            i++;
+        }
+        if (i != (index+1))
+        {
+            std::stringstream ss("");
+            ss << "Надо выравнивать по первому аргументу " << line;
+            cout << ss.str() << endl;
+            printError(ss.str());
         }
     }
 }
